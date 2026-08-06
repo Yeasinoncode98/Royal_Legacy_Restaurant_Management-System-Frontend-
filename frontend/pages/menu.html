@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Menu — Royal Legacy</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="page-loader" id="page-loader"><div class="page-loader-logo">Royal <span>Legacy</span></div><div class="spinner"></div></div>
+
+<nav class="navbar" id="navbar">
+  <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">👑</div>Royal <span>Legacy</span></a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="../index.html">Home</a></li>
+    <li><a href="menu.html" class="active">Menu</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <div class="nav-actions" id="nav-actions"></div>
+  <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+</nav>
+
+<section style="padding-top:110px">
+  <div class="section-header">
+    <div class="section-badge">🍽️ Our Menu</div>
+    <h2>Explore Our Dishes</h2>
+    <p>From sizzling grills to sweet desserts — find your perfect meal.</p>
+  </div>
+
+  <!-- Search -->
+  <div class="search-bar" id="search-bar">
+    <input type="text" id="search-input" placeholder="Search for a dish..." autocomplete="off">
+    <button onclick="doSearch()">Search</button>
+  </div>
+
+  <!-- Categories -->
+  <div class="categories" id="categories">
+    <button class="cat-btn active" data-cat="">All</button>
+    <button class="cat-btn" data-cat="Grills">🥩 Grills</button>
+    <button class="cat-btn" data-cat="Burgers">🍔 Burgers</button>
+    <button class="cat-btn" data-cat="Pizza">🍕 Pizza</button>
+    <button class="cat-btn" data-cat="Pasta">🍝 Pasta</button>
+    <button class="cat-btn" data-cat="Seafood">🦐 Seafood</button>
+    <button class="cat-btn" data-cat="Salads">🥗 Salads</button>
+    <button class="cat-btn" data-cat="Wraps">🌯 Wraps</button>
+    <button class="cat-btn" data-cat="Desserts">🍰 Desserts</button>
+    <button class="cat-btn" data-cat="Drinks">🥤 Drinks</button>
+  </div>
+
+  <div class="food-grid" id="food-grid">
+    <div class="loader"><div class="spinner"></div></div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="footer-bottom" style="border-top:none">
+    <p>© 2026 Royal Legacy. All rights reserved.</p>
+    <p><a href="../index.html" style="color:var(--primary)">← Back to Home</a></p>
+  </div>
+</footer>
+
+<button class="back-to-top" id="backToTop">↑</button>
+
+<script src="../js/config.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/api.js"></script>
+<script>
+let allFoods = [];
+
+document.addEventListener("DOMContentLoaded", async () => {
+  updateNav();
+  setupNavbar();
+  document.getElementById("hamburger").addEventListener("click", () => document.getElementById("nav-links").classList.toggle("open"));
+  document.getElementById("backToTop").addEventListener("click", () => window.scrollTo({top:0,behavior:"smooth"}));
+
+  // Category buttons
+  document.getElementById("categories").addEventListener("click", e => {
+    if(e.target.classList.contains("cat-btn")){
+      document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("active"));
+      e.target.classList.add("active");
+      loadFoods(e.target.dataset.cat, "");
+    }
+  });
+
+  // Search on enter
+  document.getElementById("search-input").addEventListener("keyup", e => { if(e.key==="Enter") doSearch(); });
+
+  // Check for URL category param
+  const params = new URLSearchParams(window.location.search);
+  const cat = params.get("cat") || "";
+  if(cat){
+    document.querySelectorAll(".cat-btn").forEach(b => {
+      b.classList.toggle("active", b.dataset.cat === cat);
+    });
+  }
+
+  await loadFoods(cat, "");
+
+  document.getElementById("page-loader").classList.add("hidden");
+});
+
+async function loadFoods(category="", search="") {
+  const grid = document.getElementById("food-grid");
+  grid.innerHTML = `<div class="loader"><div class="spinner"></div></div>`;
+  try {
+    let url = API.FOODS;
+    if(search) url += `?search=${encodeURIComponent(search)}`;
+    else if(category) url += `?category=${encodeURIComponent(category)}`;
+    const foods = await ApiService.get(url);
+    allFoods = foods;
+    if(foods.length === 0){
+      grid.innerHTML = `<p style="color:var(--text-muted);padding:40px;grid-column:1/-1;text-align:center">No dishes found. Try a different search.</p>`;
+      return;
+    }
+    grid.innerHTML = foods.map(foodCard).join("");
+  } catch(e) {
+    grid.innerHTML = `<p style="color:var(--error);padding:40px;grid-column:1/-1;text-align:center">Failed to load menu. Make sure the backend is running on port 8080.</p>`;
+  }
+}
+
+function doSearch(){
+  const val = document.getElementById("search-input").value.trim();
+  document.querySelectorAll(".cat-btn").forEach(b => b.classList.toggle("active", b.dataset.cat===""));
+  loadFoods("", val);
+}
+
+function foodCard(f){
+  const stars = "★".repeat(Math.round(f.rating))+"☆".repeat(5-Math.round(f.rating));
+  return `
+  <div class="food-card" onclick="location.href='food-detail.html?id=${f.id}'">
+    <div class="food-card-img">
+      <img src="${f.imageUrl}" alt="${f.name}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400'">
+      <span class="food-category-tag">${f.category}</span>
+    </div>
+    <div class="food-card-body">
+      <h3>${f.name}</h3>
+      <p>${f.description}</p>
+      <div class="food-meta">
+        <span class="food-price">$${f.price.toFixed(2)}</span>
+        <span class="food-rating"><span class="star">${stars}</span> ${f.rating}</span>
+      </div>
+      <div class="food-card-actions">
+        <button class="btn btn-outline" onclick="event.stopPropagation();Cart.add({id:${f.id},name:'${f.name.replace(/'/g,"\\'")}',price:${f.price},imageUrl:'${f.imageUrl}'});updateCartCount()">+ Cart</button>
+        <button class="btn btn-primary" onclick="event.stopPropagation();location.href='food-detail.html?id=${f.id}'">Details</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function setupNavbar(){
+  const nav=document.getElementById("navbar");
+  window.addEventListener("scroll",()=>{
+    nav.classList.toggle("scrolled",window.scrollY>50);
+    document.getElementById("backToTop").classList.toggle("visible",window.scrollY>400);
+  });
+}
+</script>
+</body>
+</html>

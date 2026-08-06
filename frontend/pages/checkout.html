@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Checkout — Royal Legacy</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<nav class="navbar scrolled">
+  <a href="../index.html" class="nav-logo"><div class="nav-logo-icon">👑</div>Royal <span>Legacy</span></a>
+  <div class="nav-actions" id="nav-actions"></div>
+</nav>
+
+<section style="padding-top:110px">
+  <div class="section-header">
+    <div class="section-badge">📦 Checkout</div>
+    <h2>Place Your Order</h2>
+  </div>
+  <div class="checkout-layout" id="checkout-layout"></div>
+</section>
+
+<script src="../js/config.js"></script>
+<script src="../js/cart.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/api.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  if(!Auth.isLoggedIn()){ location.href="login.html"; return; }
+  const items = Cart.getAll();
+  if(items.length===0){ location.href="cart.html"; return; }
+  updateNav();
+  renderCheckout(items);
+});
+
+function renderCheckout(items){
+  const user = Auth.get();
+  const subtotal = Cart.getTotal();
+  const delivery = 2.99;
+  const total = subtotal + delivery;
+  document.getElementById("checkout-layout").innerHTML = `
+  <div class="checkout-form-card">
+    <h3>Delivery Information</h3>
+    <form id="checkout-form">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="c-name" class="form-control" value="${user.name}" required>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" id="c-phone" class="form-control" placeholder="Your phone number" required>
+      </div>
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <textarea id="c-address" class="form-control" rows="3" placeholder="Street, area, city..." required></textarea>
+      </div>
+      <div id="err-msg" style="color:var(--error);font-size:0.85rem;display:none;margin-bottom:10px"></div>
+      <button type="submit" class="btn btn-primary btn-lg" style="width:100%" id="place-btn">
+        🎉 Place Order — $${total.toFixed(2)}
+      </button>
+    </form>
+  </div>
+  <div class="order-summary">
+    <h3>Order Summary</h3>
+    ${items.map(i=>`<div class="summary-row"><span>${i.name} x${i.quantity}</span><span>$${(i.price*i.quantity).toFixed(2)}</span></div>`).join("")}
+    <div class="summary-row"><span>Delivery</span><span>$${delivery.toFixed(2)}</span></div>
+    <div class="summary-row total"><span>Grand Total</span><span>$${total.toFixed(2)}</span></div>
+  </div>`;
+
+  document.getElementById("checkout-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById("place-btn");
+    const errEl = document.getElementById("err-msg");
+    btn.disabled=true; btn.textContent="Placing order...";
+    errEl.style.display="none";
+    try {
+      const cartItems = Cart.getAll();
+      const orderData = {
+        userId: user.userId,
+        customerName: document.getElementById("c-name").value,
+        customerPhone: document.getElementById("c-phone").value,
+        deliveryAddress: document.getElementById("c-address").value,
+        items: cartItems.map(i=>({foodItemId:i.id, quantity:i.quantity, unitPrice:i.price})),
+        totalAmount: total
+      };
+      const order = await ApiService.post(API.ORDERS, orderData);
+      Cart.clear();
+      location.href = `order-success.html?order=${order.orderNumber}&time=${order.estimatedDeliveryMinutes}&total=${order.totalAmount}`;
+    } catch(err) {
+      errEl.textContent = err.message;
+      errEl.style.display="block";
+      btn.disabled=false; btn.textContent=`🎉 Place Order — $${total.toFixed(2)}`;
+    }
+  });
+}
+</script>
+</body>
+</html>
