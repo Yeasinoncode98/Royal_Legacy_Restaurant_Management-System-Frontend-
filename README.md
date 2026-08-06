@@ -1,12 +1,43 @@
-# 🍽️ Royal Legacy — Fine Dining
+<div align="center">
 
-> A modern, responsive restaurant ordering website built with **HTML5, CSS3, and Vanilla JavaScript**, connected to a Spring Boot REST API.
+# 🍽️ Royal Legacy
+### Fine Dining — Restaurant Ordering Platform
 
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen?style=for-the-badge)](https://royal-legacy-restaurant-management.vercel.app/)
+*A modern, elegant, fully responsive restaurant website — crafted with pure HTML5, CSS3 & JavaScript.*
+
+[![Live Demo](https://img.shields.io/badge/🔴_LIVE_DEMO-royal--legacy-brightgreen?style=for-the-badge)](https://royal-legacy-restaurant-management.vercel.app/)
+
 ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)
+
+![License](https://img.shields.io/badge/License-Academic--Proprietary-red?style=for-the-badge)
+![Status](https://img.shields.io/badge/status-completed-success?style=for-the-badge)
+
+</div>
+
+---
+
+## 🎓 Academic Information
+
+| | |
+|---|---|
+| **Project** | Royal Legacy — Fine Dining Restaurant Ordering System |
+| **Author** | Yeasin Arafat |
+| **University** | Daffodil International University (DIU) |
+| **Program** | B.Sc. in Computer Science & Engineering |
+| **Semester** | 5th Semester |
+| **Course** | Object Oriented Programming (OOP) |
+| **Project Type** | Lab Final Project |
+| **Term** | Summer 2026 |
+
+---
+
+## 📖 Overview
+
+**Royal Legacy** is a fine-dining restaurant ordering platform, built end-to-end as an Object Oriented Programming lab final project. Customers can explore a curated menu, build a cart, and place orders in real time — powered by a Spring Boot REST API on the backend and a pure, framework-free frontend that stays fast and dependency-light.
 
 **🔗 Live Site:** **[royal-legacy-restaurant-management.vercel.app](https://royal-legacy-restaurant-management.vercel.app/)**
 **🔧 Backend Repo:** [Restaurant-Management-System — Backend](#)
@@ -15,7 +46,6 @@
 
 ## 📋 Table of Contents
 
-- [Overview](#-overview)
 - [Features](#-features)
 - [Tech Stack](#-tech-stack)
 - [Project Structure](#-project-structure)
@@ -25,13 +55,8 @@
 - [API Integration](#-api-integration)
 - [Deployment](#-deployment)
 - [Troubleshooting](#-troubleshooting)
+- [License & Copyright](#-license--copyright)
 - [Author](#-author)
-
----
-
-## 📖 Overview
-
-**Royal Legacy** is a fine-dining restaurant ordering platform built as a university Java OOP final project. Customers can explore the menu, build a cart, and place orders in real time. The frontend is a pure static site — no frameworks, no build step — talking to a Spring Boot + H2 backend over REST.
 
 ---
 
@@ -62,7 +87,7 @@
 | HTTP | Fetch API |
 | Hosting | Vercel |
 
-No build tools, frameworks, or bundlers — pure static site, deployed as-is.
+No build tools, frameworks, or bundlers — a pure static site, deployed as-is.
 
 ---
 
@@ -209,8 +234,44 @@ Backend likely asleep — Render free tier spins down when idle. First request a
 
 ---
 
+## 📜 License & Copyright
+
+```
+Copyright © 2026 Yeasin Arafat. All Rights Reserved.
+```
+
+This project — **Royal Legacy: Fine Dining Restaurant Ordering System** — was independently designed and developed by **Yeasin Arafat** as an Object Oriented Programming (OOP) Lab Final Project at **Daffodil International University**, Summer 2026.
+
+> **⚠️ NOTICE — UNAUTHORIZED USE PROHIBITED**
+>
+> This repository and all of its contents (source code, design, documentation, and assets) are the intellectual property of the author. **No part of this project may be copied, reproduced, submitted, redistributed, or claimed as another person's academic work without the express written permission of the author.**
+>
+> Submitting this project, in whole or in part, as your own coursework constitutes **academic plagiarism** and may result in disciplinary action under your institution's academic integrity policy, in addition to copyright infringement liability.
+>
+> Viewing and referencing this repository for **personal learning purposes** is welcome. Copying it for submission, resale, or redistribution is **strictly forbidden** and will be pursued accordingly.
+
+For permissions or collaboration inquiries, contact the author directly (see below).
+
+---
+
 ## 👤 Author
 
-**Yeasin Arafat**
-Lead Developer — Royal Legacy
-[GitHub](https://github.com/Yeasinoncode98)
+<div align="center">
+
+### Yeasin Arafat
+
+**Lead Software & Full Stack Developer**
+B.Sc. in Computer Science & Engineering — 5th Semester
+Daffodil International University (DIU)
+
+[![GitHub](https://img.shields.io/badge/GitHub-Yeasinoncode98-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Yeasinoncode98)
+
+</div>
+
+---
+
+<div align="center">
+
+**© 2026 Yeasin Arafat — Royal Legacy. All Rights Reserved.**
+
+</div>
