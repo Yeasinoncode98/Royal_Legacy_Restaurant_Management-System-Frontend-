@@ -10,12 +10,12 @@
 // };
 
 const CONFIG = {
-  BACKEND_URL: "https://royal-legacy-restaurant-management-6303.onrender.com"
+  BACKEND_URL: "https://royal-legacy-restaurant-management-6303.onrender.com",
 };
 
 const API = {
   BASE: CONFIG.BACKEND_URL + "/api",
   AUTH: CONFIG.BACKEND_URL + "/api/auth",
   FOODS: CONFIG.BACKEND_URL + "/api/foods",
-  ORDERS: CONFIG.BACKEND_URL + "/api/orders"
+  ORDERS: CONFIG.BACKEND_URL + "/api/orders",
 };
