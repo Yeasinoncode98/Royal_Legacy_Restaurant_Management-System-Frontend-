@@ -792,6 +792,27 @@
       document.getElementById("confirm-del-btn").addEventListener("click", confirmDelete);
     });
 
+    /* ===== TIME FIX =====
+       Root cause of the memo showing 5:55 PM instead of the real
+       11:58 PM BD time: the backend sends createdAt as a plain
+       LocalDateTime string like "2026-08-08T17:55:00" with NO
+       timezone/offset suffix. Without a "Z" or "+06:00" at the end,
+       JS's Date parser treats that string as already being in the
+       BROWSER's local time — so it never shifts it, and Bangladesh
+       (UTC+6) ends up seeing the raw UTC value printed as if it
+       were local time (a ~6 hour gap, which matches 5:55 PM vs
+       11:58 PM exactly).
+       Fix: if the raw string has no timezone marker, treat it as
+       UTC explicitly (append "Z"), then always render with
+       timeZone:"Asia/Dhaka" so it's correct no matter which
+       timezone the browser itself is running in. */
+    function formatBDTime(raw, opts) {
+      if (!raw) return "—";
+      const hasTZ = /Z$|[+-]\d{2}:\d{2}$/.test(raw);
+      const d = new Date(hasTZ ? raw : raw + "Z");
+      return d.toLocaleString("en-BD", { ...opts, timeZone: "Asia/Dhaka" });
+    }
+
     // Staggered row reveal — call after any table body is (re)rendered.
     function alRevealRows(tbodySelector) {
       const rows = document.querySelectorAll(tbodySelector + " tr");
@@ -905,7 +926,7 @@
       </tr></thead>
       <tbody>${orders.map(o => {
           const itemList = o.items.map(i => i.foodName + " x" + i.quantity).join(", ");
-          const time = o.createdAt ? new Date(o.createdAt).toLocaleString("en-BD", { dateStyle: "medium", timeStyle: "short" }) : "—";
+          const time = formatBDTime(o.createdAt, { dateStyle: "medium", timeStyle: "short" });
           const sc = o.status === "CANCELLED" ? "badge-warning" : "badge-success";
           const od = encodeURIComponent(JSON.stringify(o));
           return `<tr>
@@ -927,7 +948,7 @@
     /* ===== CASH MEMO ===== */
     function openMemo(encoded) {
       const o = JSON.parse(decodeURIComponent(encoded));
-      const time = o.createdAt ? new Date(o.createdAt).toLocaleString("en-BD", { dateStyle: "long", timeStyle: "short" }) : "—";
+      const time = formatBDTime(o.createdAt, { dateStyle: "long", timeStyle: "short" });
       const delivery = 2.99;
       const subtotal = o.totalAmount - delivery;
 
